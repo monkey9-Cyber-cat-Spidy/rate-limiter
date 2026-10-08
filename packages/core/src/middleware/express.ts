@@ -71,7 +71,9 @@ export function createRateLimiter(config: MiddlewareConfig): RequestHandler {
     // 2. Execute rate limiting
     let result: RateLimiterResult;
     try {
-      result = await limiter.limit(identifier);
+      result = limiter instanceof SlidingWindow
+        ? await limiter.limit(identifier, uniqueMember)
+        : await limiter.limit(identifier);
     } catch (err) {
       console.error('[RateLimiter] Execution error, falling back to allow:', err);
       result = {

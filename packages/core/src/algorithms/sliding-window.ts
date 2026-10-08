@@ -13,11 +13,11 @@ export class SlidingWindow {
     private readonly config: RateLimiterConfig
   ) {}
 
-  async limit(identifier: string): Promise<RateLimiterResult> {
+  async limit(identifier: string, member?: string): Promise<RateLimiterResult> {
     const { keyPrefix, max, windowMs } = this.config;
     const now = Date.now();
     const key = `rl:${keyPrefix}:${identifier}`;
-    const uniqueMember = `${now}:${Math.random().toString(36).substring(2, 7)}`;
+    const uniqueMember = member ?? `${now}:${Math.random().toString(36).substring(2, 7)}`;
 
     if (this.store instanceof RedisStore) {
       try {
